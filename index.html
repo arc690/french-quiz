@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>French Language Quiz</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            margin-bottom: 24px;
+            color: #00bfa5;
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .question {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .emoji {
+            font-size: 48px;
+            margin-top: 8px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .options button {
+            margin-bottom: 16px;
+            padding: 12px 32px;
+            background-color: #00bfa5;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .options button:hover {
+            background-color: #027c6b;
+        }
+
+        .score {
+            font-weight: bold;
+            margin-top: 32px;
+            text-align: center;
+            animation: slideIn 0.5s ease;
+        }
+
+        .character {
+            width: 200px;
+            height: 200px;
+            background-image: url('character.png'); /* Replace with your character image */
+            background-size: cover;
+            margin-left: 24px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .intro-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #00bfa5, rgb(0, 175, 152));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+          }
+          
+          .logo {
+            max-width: 200px;
+            max-height: 200px;
+          }
+          
+          .intro-section.hide {
+            opacity: 0;
+            pointer-events: none;
+          }
+    </style>
+</head>
+
+<body>
+    <div class="intro-section">
+        <img src="your-logo.png" alt="Logo" class="logo">
+    </div>
+    <script>
+        // Function to hide the intro section after a certain duration
+        function hideIntroSection() {
+            const introSection = document.querySelector('.intro-section');
+            introSection.classList.add('hide');
+        }
+        
+        // Hide the intro section after 5 seconds (5000 milliseconds)
+        setTimeout(hideIntroSection, 5000);
+    </script>
+    <div class="container">
+        <h1>French Language Quiz</h1>
+        <div class="question">
+            <p id="questionText">What is the French word for "Hello"?</p>
+            <p class="emoji">&#x1F590;</p>
+        </div>
+        <div class="options">
+            <button onclick="checkAnswer('a')">Bonjour</button>
+            <button onclick="checkAnswer('b')">Au revoir</button>
+            <button onclick="checkAnswer('c')">S'il vous plaît</button>
+            <button onclick="checkAnswer('d')">Merci</button>
+        </div>
+        <p id="scoreText" class="score"></p>
+    </div>
+
+    <div class="character"></div>
+
+    <script>
+        const levels = [
+            {
+                level: 1,
+                questions: [
+                    {
+                        question: "What is the French word for 'Hello'?",
+                        emoji: "&#x1F590;",
+                        options: {
+                            a: "Bonjour",
+                            b: "Au revoir",
+                            c: "S'il vous plaît",
+                            d: "Merci"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What does 'Au revoir' mean in French?",
+                        emoji: "&#x1F44B;",
+                        options: {
+                            a: "Goodbye",
+                            b: "Hello",
+                            c: "Please",
+                            d: "Thank you"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Yes'?",
+                        emoji: "&#x2705;",
+                        options: {
+                            a: "Non",
+                            b: "Oui",
+                            c: "Peut-être",
+                            d: "Bien sûr"
+                        },
+                        answer: "b"
+                    },
+                    {
+                        question: "What does 'Comment ça va?' mean in French?",
+                        emoji: "&#x1F64B;",
+                        options: {
+                            a: "How are you?",
+                            b: "What is your name?",
+                            c: "Good morning",
+                            d: "Where are you?"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Thank you'?",
+                        emoji: "&#x1F64F;",
+                        options: {
+                            a: "Excusez-moi",
+                            b: "Merci",
+                            c: "S'il vous plaît",
+                            d: "Pardon"
+                        },
+                        answer: "b"
+                    },
+                    {
+                        question: "What does 'Excusez-moi' mean in French?",
+                        emoji: "&#x1F64F;",
+                        options: {
+                            a: "Excuse me",
+                            b: "Thank you",
+                            c: "I'm sorry",
+                            d: "How are you"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Please'?",
+                        emoji: "&#x1F64F;",
+                        options: {
+                            a: "Non",
+                            b: "Oui",
+                            c: "S'il vous plaît",
+                            d: "Excusez-moi"
+                        },
+                        answer: "c"
+                    },
+                    {
+                        question: "What is the French word for 'Goodbye'?",
+                        emoji: "&#x1F44B;",
+                        options: {
+                            a: "Au revoir",
+                            b: "Bonjour",
+                            c: "Merci",
+                            d: "Oui"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What does 'Je m'appelle' mean in French?",
+                        emoji: "&#x1F4AC;",
+                        options: {
+                            a: "My name is",
+                            b: "Where are you?",
+                            c: "Excuse me",
+                            d: "I'm sorry"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Good morning'?",
+                        emoji: "&#x1F305;",
+                        options: {
+                            a: "Bonsoir",
+                            b: "Bon après-midi",
+                            c: "Bon matin",
+                            d: "Bonjour"
+                        },
+                        answer: "d"
+                    },
+                    {
+                        question: "What does 'Parlez-vous anglais?' mean in French?",
+                        emoji: "&#x1F64F;",
+                        options: {
+                            a: "Do you speak French?",
+                            b: "Where is the bathroom?",
+                            c: "I don't understand",
+                            d: "Do you speak English?"
+                        },
+                        answer: "d"
+                    }
+                ]
+            },
+            {
+                level: 2,
+                questions: [
+                    {
+                        question: "What is the French word for 'I love you'?",
+                        emoji: "&#x2764;&#xFE0F;",
+                        options: {
+                            a: "Je t'aime",
+                            b: "Bonjour",
+                            c: "Merci",
+                            d: "S'il vous plaît"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What does 'Je ne sais pas' mean in French?",
+                        emoji: "&#x1F914;",
+                        options: {
+                            a: "I don't know",
+                            b: "Excuse me",
+                            c: "Please",
+                            d: "I'm sorry"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Good evening'?",
+                        emoji: "&#x1F307;",
+                        options: {
+                            a: "Bonsoir",
+                            b: "Bon après-midi",
+                            c: "Bon matin",
+                            d: "Bonjour"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What does 'Comment tu t'appelles?' mean in French?",
+                        emoji: "&#x1F4AC;",
+                        options: {
+                            a: "What is your name?",
+                            b: "How are you?",
+                            c: "Good morning",
+                            d: "Where are you?"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Excuse me'?",
+                        emoji: "&#x1F64F;",
+                        options: {
+                            a: "Excusez-moi",
+                            b: "Merci",
+                            c: "S'il vous plaît",
+                            d: "Pardon"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What does 'Comment ça s'écrit?' mean in French?",
+                        emoji: "&#x270D;&#xFE0F;",
+                        options: {
+                            a: "How do you spell it?",
+                            b: "Do you speak French?",
+                            c: "I don't understand",
+                            d: "Where is the bathroom?"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Good night'?",
+                        emoji: "&#x1F31B;",
+                        options: {
+                            a: "Bonsoir",
+                            b: "Bon après-midi",
+                            c: "Bon matin",
+                            d: "Bonne nuit"
+                        },
+                        answer: "d"
+                    },
+                    {
+                        question: "What does 'Pouvez-vous répéter?' mean in French?",
+                        emoji: "&#x1F914;",
+                        options: {
+                            a: "Can you repeat?",
+                            b: "Where is the bathroom?",
+                            c: "I don't understand",
+                            d: "Do you speak English?"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'My name is'?",
+                        emoji: "&#x1F4AC;",
+                        options: {
+                            a: "Je m'appelle",
+                            b: "Où êtes-vous?",
+                            c: "Excusez-moi",
+                            d: "Je suis désolé"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What does 'Je suis désolé' mean in French?",
+                        emoji: "&#x1F61F;",
+                        options: {
+                            a: "I'm sorry",
+                            b: "Thank you",
+                            c: "Excuse me",
+                            d: "How are you"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'How much is it?'",
+                        emoji: "&#x1F4B2;",
+                        options: {
+                            a: "Combien ça coûte?",
+                            b: "Où est la gare?",
+                            c: "Je ne sais pas",
+                            d: "Parlez-vous anglais?"
+                        },
+                        answer: "a"
+                    }
+                ]
+            },
+            {
+                level: 3,
+                questions: [
+                    {
+                        question: "What is the French word for 'Where is the bathroom?'",
+                        emoji: "&#x1F6BD;",
+                        options: {
+                            a: "Où est la gare?",
+                            b: "Où est la plage?",
+                            c: "Où sont les toilettes?",
+                            d: "Où habitez-vous?"
+                        },
+                        answer: "c"
+                    },
+                    {
+                        question: "What does 'Je suis en retard' mean in French?",
+                        emoji: "&#x23F0;",
+                        options: {
+                            a: "I'm late",
+                            b: "Excuse me",
+                            c: "Please",
+                            d: "I'm sorry"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Where are you?'",
+                        emoji: "&#x1F464;",
+                        options: {
+                            a: "Où êtes-vous?",
+                            b: "Comment ça va?",
+                            c: "Que faites-vous?",
+                            d: "Quel est votre nom?"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What does 'Je ne comprends pas' mean in French?",
+                        emoji: "&#x1F914;",
+                        options: {
+                            a: "I don't understand",
+                            b: "Do you speak French?",
+                            c: "Where is the bathroom?",
+                            d: "Excuse me"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Excuse me' (getting attention)?",
+                        emoji: "&#x1F64F;",
+                        options: {
+                            a: "Excusez-moi",
+                            b: "Merci",
+                            c: "S'il vous plaît",
+                            d: "Pardon"
+                        },
+                        answer: "d"
+                    },
+                    {
+                        question: "What does 'Je suis désolé' mean in French?",
+                        emoji: "&#x1F61F;",
+                        options: {
+                            a: "I'm sorry",
+                            b: "Thank you",
+                            c: "Excuse me",
+                            d: "How are you"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Do you speak English?'",
+                        emoji: "&#x1F914;",
+                        options: {
+                            a: "Parlez-vous français?",
+                            b: "Où est la plage?",
+                            c: "Je ne sais pas",
+                            d: "Parlez-vous anglais?"
+                        },
+                        answer: "d"
+                    },
+                    {
+                        question: "What does 'Qu'est-ce que c'est?' mean in French?",
+                        emoji: "&#x1F914;",
+                        options: {
+                            a: "What is it?",
+                            b: "Where is the bathroom?",
+                            c: "I don't understand",
+                            d: "Can you help me?"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'How are you?'",
+                        emoji: "&#x1F44B;",
+                        options: {
+                            a: "Comment ça va?",
+                            b: "Où est la gare?",
+                            c: "Je ne sais pas",
+                            d: "Parlez-vous anglais?"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What does 'C'est combien?' mean in French?",
+                        emoji: "&#x1F4B2;",
+                        options: {
+                            a: "How much is it?",
+                            b: "Where is the train station?",
+                            c: "I don't understand",
+                            d: "Do you speak English?"
+                        },
+                        answer: "a"
+                    },
+                    {
+                        question: "What is the French word for 'Thank you very much'?",
+                        emoji: "&#x1F64F;",
+                        options: {
+                            a: "Merci beaucoup",
+                            b: "Excusez-moi",
+                            c: "S'il vous plaît",
+                            d: "Pardon"
+                        },
+                        answer: "a"
+                    }
+                ]
+            }
+        ];
+
+        let currentLevel = 1;
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz() {
+            const introSection = document.querySelector('.intro-section');
+            introSection.classList.add('hide');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionText = document.getElementById("questionText");
+            const emoji = document.querySelector(".emoji");
+            const options = document.querySelector(".options");
+
+            questionText.innerHTML = levels[currentLevel - 1].questions[currentQuestion].question;
+            emoji.innerHTML = levels[currentLevel - 1].questions[currentQuestion].emoji;
+
+            options.innerHTML = "";
+            const currentOptions = levels[currentLevel - 1].questions[currentQuestion].options;
+            for (const option in currentOptions) {
+                const button = document.createElement("button");
+                button.innerHTML = currentOptions[option];
+                button.setAttribute("onclick", `checkAnswer('${option}')`);
+                options.appendChild(button);
+            }
+        }
+
+        function checkAnswer(option) {
+            const answer = levels[currentLevel - 1].questions[currentQuestion].answer;
+
+            if (option === answer) {
+                score++;
+            }
+
+            currentQuestion++;
+
+            if (currentQuestion < levels[currentLevel - 1].questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+
+        function showScore() {
+            const questionSection = document.querySelector('.question');
+            const options = document.querySelector('.options');
+            const scoreText = document.getElementById("scoreText");
+            const character = document.querySelector('.character');
+
+            questionSection.style.display = "none";
+            options.style.display = "none";
+
+            scoreText.innerHTML = `Your score: ${score}/${levels[currentLevel - 1].questions.length}`;
+
+            character.style.display = "block";
+        }
+    </script>
+</body>
+
+</html>
